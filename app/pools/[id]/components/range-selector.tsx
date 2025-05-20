@@ -131,8 +131,20 @@ export const RangeSelector = ({ bins, tokenX, tokenY, activeBin, onSelectedRange
                 } else if (!isInSelectedRange) {
                   fill = 'rgba(61, 64, 98, 0.3)'; // Затемненный цвет для бинов вне диапазона
                 }
+                
+                // Стили для анимации
+                const style = {
+                  transition: `fill 0.2s ease`,
+                };
 
-                return <rect x={x} y={y} width={width} height={height} fill={fill} />;
+                return <rect 
+                  x={x} 
+                  y={y} 
+                  width={width} 
+                  height={height} 
+                  fill={fill}
+                  style={style}
+                />;
               }}
             />
           </BarChart>
@@ -172,13 +184,13 @@ export const RangeSelector = ({ bins, tokenX, tokenY, activeBin, onSelectedRange
       <div className="grid grid-cols-3 gap-5 mt-8">
         <div className="bg-dark-surface-hover p-2 rounded-xl border border-dark-border shadow-dark-sm">
           <div className="text-xs text-dark-text-tertiary mb-1">Min Price</div>
-          <div className="text-lg font-bold">{Number(bins[selectedRange[0]]?.price).toFixed(4)}</div>
-          {activeBinData && bins[selectedRange[0]] && <div className="text-xs text-dark-text-tertiary mt-1">{Number((+bins[selectedRange[0]].price / +activeBinData.price - 1) * 100).toFixed(2)}%</div>}
+          <div className="text-lg font-bold">{Number(bins[selectedRange[0]]?.pricePerToken).toFixed(4)}</div>
+          {activeBinData && bins[selectedRange[0]] && <div className="text-xs text-dark-text-tertiary mt-1">{Number((+bins[selectedRange[0]].pricePerToken / +activeBinData.pricePerToken - 1) * 100).toFixed(2)}%</div>}
         </div>
         <div className="bg-dark-surface-hover p-2 rounded-xl border border-dark-border shadow-dark-sm">
           <div className="text-xs text-dark-text-tertiary mb-1">Max Price</div>
-          <div className="text-lg font-bold">{Number(bins[selectedRange[1]]?.price).toFixed(4)}</div>
-          {activeBinData && bins[selectedRange[1]] && <div className="text-xs text-dark-text-tertiary mt-1">{Number((+bins[selectedRange[1]].price / +activeBinData.price - 1)  * 100).toFixed(2)}%</div>}
+          <div className="text-lg font-bold">{Number(bins[selectedRange[1]]?.pricePerToken).toFixed(4)}</div>
+          {activeBinData && bins[selectedRange[1]] && <div className="text-xs text-dark-text-tertiary mt-1">{Number((+bins[selectedRange[1]].pricePerToken / +activeBinData.pricePerToken - 1)  * 100).toFixed(2)}%</div>}
         </div>
         <div className="bg-dark-surface-hover p-2 rounded-xl border border-dark-border shadow-dark-sm">
           <div className="text-xs text-dark-text-tertiary mb-1">Num Bins</div>

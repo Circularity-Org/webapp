@@ -5,7 +5,7 @@ import { ResponsiveContainer } from 'recharts';
 import Slider from 'rc-slider';
 import { useEffect, useState } from 'react';
 import { TokenAmount } from '@/shared/utils/tokenAmount';
-
+import { VolatilityStrategy } from './price-range-selector';
 interface VolatilityChartProps {
   bins: BinLiquidity[];
   tokenX: JupApiToken;
@@ -14,6 +14,7 @@ interface VolatilityChartProps {
   tokenXAmount: string;
   tokenYAmount: string;
   onSelectedBinsChange: (bins: BinLiquidity[], selected: number) => void;
+  selectedStrategy: VolatilityStrategy;
 }
 
 // ts-ignore
@@ -35,7 +36,88 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-export const VolatilityChart = ({ bins, tokenX, tokenY, activeBin, tokenXAmount, tokenYAmount, onSelectedBinsChange }: VolatilityChartProps) => {
+function linearDecreasingDistribution(bins: number): number[] {
+  const weights: number[] = [];
+  
+  for (let i = 0; i < bins; i++) {
+    // Линейное уменьшение от начала к концу
+    const weight = 1 - (i / (bins));
+    weights.push(weight);
+  }
+  
+  // Нормализация весов, чтобы сумма была равна 1
+  const sum = weights.reduce((a, b) => a + b, 0);
+  return weights.map(w => w / sum);
+}
+
+function getAmount(type: VolatilityStrategy, bins: BinLiquidity[], selected: number, bin: BinLiquidity, index: number, tokenX: JupApiToken, tokenY: JupApiToken, tokenXAmount: string, tokenYAmount: string): TokenAmount {
+  const isTokenX = selected <= index;
+  const total = bins.reduce((acc, bin, index) => {
+    if (index < selected) {
+      return acc;
+    }
+    return acc + (1 / +bin.pricePerToken);
+  }, 0);
+
+  if (type === 'spot') {
+    const pvFactor = TokenAmount.fromHumanAmount(tokenX.token, ((1 / +bin.pricePerToken) / total).toString() as `${number}`);
+
+    const tokenYFactor = TokenAmount.fromHumanAmount(tokenY.token, selected.toString() as `${number}`);
+    const amount = isTokenX
+      ? TokenAmount.fromHumanAmount(tokenX.token, tokenXAmount as `${number}`).mulDownFixed(pvFactor.scale18)
+      : TokenAmount.fromHumanAmount(tokenY.token, tokenYAmount as `${number}`).divDownFixed(tokenYFactor.scale18);
+
+    return amount;
+  }
+
+  if (type === 'curve') {
+    const weights = linearDecreasingDistribution(isTokenX ? bins.length - selected : selected);
+
+    if (!isTokenX) {
+      weights.reverse();
+    }
+    
+    // Получаем вес для текущего бина
+    const binPosition = isTokenX ? index - selected : index;
+    console.log(binPosition, weights, tokenX);
+    const weight = binPosition >= 0 ? weights[binPosition] : 0;
+    
+    // Создаем фактор на основе веса
+    const pvFactor = TokenAmount.fromHumanAmount(tokenX.token, weight.toString() as `${number}`);
+
+    const amount = isTokenX
+      ? TokenAmount.fromHumanAmount(tokenX.token, tokenXAmount as `${number}`).mulDownFixed(pvFactor.scale18)
+      : TokenAmount.fromHumanAmount(tokenY.token, tokenYAmount as `${number}`).mulDownFixed(pvFactor.scale18);
+      
+    return amount;
+  }
+
+  if (type === 'bidask') {
+    const weights = linearDecreasingDistribution(isTokenX ? bins.length - selected : selected).reverse();
+
+    if (!isTokenX) {
+      weights.reverse();
+    }
+    
+    // Получаем вес для текущего бина
+    const binPosition = isTokenX ? index - selected : index;
+    console.log(binPosition, weights, tokenX);
+    const weight = binPosition >= 0 ? weights[binPosition] : 0;
+    
+    // Создаем фактор на основе веса
+    const pvFactor = TokenAmount.fromHumanAmount(tokenX.token, weight.toString() as `${number}`);
+
+    const amount = isTokenX
+      ? TokenAmount.fromHumanAmount(tokenX.token, tokenXAmount as `${number}`).mulDownFixed(pvFactor.scale18)
+      : TokenAmount.fromHumanAmount(tokenY.token, tokenYAmount as `${number}`).mulDownFixed(pvFactor.scale18);
+      
+    return amount;
+  }
+
+  return TokenAmount.fromHumanAmount(tokenX.token, '0');
+}
+
+export const VolatilityChart = ({ bins, tokenX, tokenY, activeBin, tokenXAmount, tokenYAmount, onSelectedBinsChange, selectedStrategy }: VolatilityChartProps) => {
   const [selected, setSelected] = useState(Math.floor(bins.length / 2));
 
   useEffect(() => {
@@ -44,19 +126,7 @@ export const VolatilityChart = ({ bins, tokenX, tokenY, activeBin, tokenXAmount,
 
   const chartData = bins.map((bin, index) => {
     const isTokenX = selected <= index;
-    const total = bins.reduce((acc, bin, index) => {
-      if (index < selected) {
-        return acc;
-      }
-      return acc + (1 / +bin.pricePerToken);
-    }, 0);
-
-    const pvFactor = TokenAmount.fromHumanAmount(tokenX.token, ((1 / +bin.pricePerToken) / total).toString() as `${number}`);
-
-    const tokenYFactor = TokenAmount.fromHumanAmount(tokenY.token, selected.toString() as `${number}`);
-    const amount = isTokenX
-      ? TokenAmount.fromHumanAmount(tokenX.token, tokenXAmount as `${number}`).mulDownFixed(pvFactor.scale18)
-      : TokenAmount.fromHumanAmount(tokenY.token, tokenYAmount as `${number}`).divDownFixed(tokenYFactor.scale18);
+    const amount = getAmount(selectedStrategy, bins, selected, bin, index, tokenX, tokenY, tokenXAmount, tokenYAmount);
 
     const price = TokenAmount.fromHumanAmount(tokenX.token, bin.pricePerToken.toString() as `${number}`);
 
@@ -124,7 +194,7 @@ export const VolatilityChart = ({ bins, tokenX, tokenY, activeBin, tokenXAmount,
 
                 const fill = isTokenX ? '#6F61C0' : '#22D3EE';
 
-                return <rect x={x} y={y} rx={4} width={width} height={height} fill={fill} className='hover:opacity-80 transition-opacity duration-100' />;
+                return <rect x={x} y={y} rx={4} width={width} height={height} fill={fill} className='hover:opacity-80 transition-all duration-100' />;
               }}
             />
           </BarChart>

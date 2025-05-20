@@ -14,70 +14,70 @@ export default {
       colors: {
         dark: {
           bg: {
-            DEFAULT: '#0D1117',
-            secondary: '#161B22',
-            tertiary: '#1F2937',
+            DEFAULT: '#0d1117',
+            secondary: '#161b22',
+            tertiary: '#21262d',
           },
           surface: {
-            DEFAULT: '#121620',
-            hover: '#1C2333',
-            active: '#252E3F',
+            DEFAULT: '#1a1f24',
+            hover: '#24292e',
+            active: '#2d333b',
           },
           border: {
-            DEFAULT: '#30363D',
-            light: '#383F47',
-            focus: '#58A6FF',
+            DEFAULT: '#30363d',
+            light: '#484f58',
+            focus: '#58a6ff',
           },
           text: {
-            primary: '#E6EDF3',
-            secondary: '#8B949E',
-            tertiary: '#6E7681',
-            disabled: '#484F58',
+            primary: '#f0f6fc',
+            secondary: '#c9d1d9',
+            tertiary: '#8b949e',
+            disabled: '#6e7681',
           },
           accent: {
             primary: {
-              DEFAULT: '#00E599',
-              hover: '#00F5A0',
-              muted: 'rgba(0, 229, 153, 0.2)',
+              DEFAULT: '#7ee787',
+              hover: '#56d364',
+              muted: 'rgba(126, 231, 135, 0.15)',
             },
             blue: {
-              DEFAULT: '#58A6FF',
-              muted: 'rgba(88, 166, 255, 0.2)',
+              DEFAULT: '#58a6ff',
+              muted: 'rgba(88, 166, 255, 0.15)',
             },
             purple: {
-              DEFAULT: '#BD93F9',
-              muted: 'rgba(189, 147, 249, 0.2)',
+              DEFAULT: '#bc8cff',
+              muted: 'rgba(188, 140, 255, 0.15)',
             },
             pink: {
-              DEFAULT: '#FF79C6',
-              muted: 'rgba(255, 121, 198, 0.2)',
+              DEFAULT: '#ff7b72',
+              muted: 'rgba(255, 123, 114, 0.15)',
             },
             orange: {
-              DEFAULT: '#FFCA80',
-              muted: 'rgba(255, 202, 128, 0.2)',
+              DEFAULT: '#ffa657',
+              muted: 'rgba(255, 166, 87, 0.15)',
             },
           },
           status: {
             danger: {
-              DEFAULT: '#FF4D4D',
-              muted: 'rgba(255, 77, 77, 0.2)',
+              DEFAULT: '#f85149',
+              muted: 'rgba(248, 81, 73, 0.15)',
             },
             warning: {
-              DEFAULT: '#FFB800',
-              muted: 'rgba(255, 184, 0, 0.2)',
+              DEFAULT: '#f0883e',
+              muted: 'rgba(240, 136, 62, 0.15)',
             },
             success: {
-              DEFAULT: '#00E599',
-              muted: 'rgba(0, 229, 153, 0.2)',
+              DEFAULT: '#56d364',
+              muted: 'rgba(86, 211, 100, 0.15)',
             },
             info: {
-              DEFAULT: '#58A6FF',
-              muted: 'rgba(88, 166, 255, 0.2)',
+              DEFAULT: '#58a6ff',
+              muted: 'rgba(88, 166, 255, 0.15)',
             },
           },
         },
-        bg: '#0A0A0A',
-        surface: '#121212',
+        bg: '#0d1117',
+        surface: '#1a1f24',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -89,7 +89,7 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-          hover: '#00F5A0',
+          hover: '#56d364',
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -115,9 +115,9 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        danger: '#FF4D4D',
-        warning: '#FFB800',
-        success: '#00E599',
+        danger: '#f85149',
+        warning: '#f0883e',
+        success: '#56d364',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
@@ -140,11 +140,16 @@ export default {
         'spin-slow-reverse': 'spin 25s linear infinite reverse',
         'pulse-glow': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'shine': 'shine 1.5s ease-in-out infinite',
+        'bar-change': 'bar-change 0.5s ease-in-out'
       },
       keyframes: {
         shine: {
           '100%': { left: '125%' },
         },
+        'bar-change': {
+          '0%': { opacity: '0.5', transform: 'scaleY(0.9)' },
+          '100%': { opacity: '1', transform: 'scaleY(1)' }
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

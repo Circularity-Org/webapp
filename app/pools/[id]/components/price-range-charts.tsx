@@ -10,18 +10,21 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { RangeSelector } from './range-selector';
 import { VolatilityChart } from './volatility-chart';
 import { debounce } from 'lodash';
+import { VolatilityStrategy } from './price-range-selector';
 
 export const PriceRangeCharts = ({
   pool,
   tokenX,
   tokenY,
   tokenXAmount,
+  selectedStrategy,
   tokenYAmount,
 }: {
   pool: PairInfo;
   tokenX: JupApiToken;
   tokenY: JupApiToken;
   tokenXAmount: string;
+  selectedStrategy: VolatilityStrategy;
   tokenYAmount: string;
 }) => {
   const { getRange, dlmmPool, activeBinId, setActiveBinId } = useDLMM(new PublicKey(pool.address));
@@ -121,6 +124,7 @@ export const PriceRangeCharts = ({
           tokenX={tokenX}
           tokenY={tokenY}
           activeBin={activeBinId ?? 0}
+          selectedStrategy={selectedStrategy}
           tokenXAmount={tokenXAmount}
           tokenYAmount={tokenYAmount}
         />

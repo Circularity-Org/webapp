@@ -12,10 +12,10 @@ interface PriceRangeSelectorProps {
   tokenXAmount: string;
   tokenYAmount: string;
 }
-type VolatilityStrategy = 'spot' | 'curve' | 'bidask';
+export type VolatilityStrategy = 'spot' | 'curve' | 'bidask';
 
 export const PriceRangeSelector = ({ pool, tokenX, tokenY, tokenXAmount, tokenYAmount }: PriceRangeSelectorProps) => {
-  const [selectedStrategy, setSelectedStrategy] = useState<VolatilityStrategy>('curve');
+  const [selectedStrategy, setSelectedStrategy] = useState<VolatilityStrategy>('spot');
   const [invertedPrice, setInvertedPrice] = useState(false);
 
   const getStrategyDescription = () => {
@@ -178,7 +178,7 @@ export const PriceRangeSelector = ({ pool, tokenX, tokenY, tokenXAmount, tokenYA
       </div>
 
       <div>
-        <PriceRangeCharts pool={pool} tokenX={tokenX} tokenY={tokenY} tokenXAmount={tokenXAmount} tokenYAmount={tokenYAmount} />
+        <PriceRangeCharts pool={pool} tokenX={tokenX} tokenY={tokenY} selectedStrategy={selectedStrategy} tokenXAmount={tokenXAmount} tokenYAmount={tokenYAmount} />
       </div>
     </div>
   );

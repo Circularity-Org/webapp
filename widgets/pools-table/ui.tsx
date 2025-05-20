@@ -47,14 +47,14 @@ export function PoolsTable({ pools, totalCount, page, onPageChange, limit, onSea
   );
 
   return (
-    <div className="rounded-xl bg-gradient-to-b from-zinc-900/95 to-black/95 border border-zinc-800/40 overflow-hidden backdrop-blur-sm shadow-lg shadow-black/30">
+    <div className="rounded-xl bg-gradient-to-b from-zinc-900/95 via-zinc-950/95 to-black/90 border border-zinc-800/40 overflow-hidden backdrop-blur-sm shadow-xl shadow-black/40">
       <div className="p-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-zinc-800/50">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-500" size={18} />
           <Input
             placeholder="Search by token name, symbol, mint"
             onChange={(e) => onSearch(e.target.value)}
-            className="pl-10 bg-zinc-900/70 border-zinc-800/50 w-full focus-visible:ring-zinc-700/60 focus-visible:border-zinc-700/60 text-zinc-300 rounded-lg transition-all duration-200"
+            className="pl-10 bg-zinc-900/70 border-zinc-800/50 w-full focus-visible:ring-blue-500/30 focus-visible:border-blue-500/30 text-zinc-300 rounded-lg transition-all duration-200"
           />
         </div>
 
@@ -63,7 +63,7 @@ export function PoolsTable({ pools, totalCount, page, onPageChange, limit, onSea
             onClick={() => setShowMyPools(!showMyPools)}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
               showMyPools
-                ? 'bg-zinc-800/80 text-zinc-200 border border-zinc-700/70'
+                ? 'bg-blue-900/40 text-blue-300 border border-blue-700/50 shadow-inner shadow-blue-900/20'
                 : 'bg-zinc-900/70 text-zinc-500 border border-zinc-800/50 hover:bg-zinc-800/60 hover:text-zinc-300'
             }`}
           >
@@ -95,7 +95,7 @@ export function PoolsTable({ pools, totalCount, page, onPageChange, limit, onSea
               <TableRow>
                 <td colSpan={5} className="h-60">
                   <div className="w-full h-full flex items-center justify-center">
-                    <Loader2 className="h-8 w-8 text-zinc-500 animate-spin" />
+                    <Loader2 className="h-8 w-8 text-blue-400 animate-spin" />
                   </div>
                 </td>
               </TableRow>
@@ -109,7 +109,11 @@ export function PoolsTable({ pools, totalCount, page, onPageChange, limit, onSea
               </TableRow>
             ) : (
               pools.map((pool, index) => (
-                <PoolRow key={pool.address} pool={pool} className={index % 2 === 0 ? 'bg-zinc-900/60' : 'bg-zinc-900/30'} />
+                <PoolRow 
+                  key={pool.address} 
+                  pool={pool} 
+                  className={index % 2 === 0 ? 'bg-zinc-900/60 hover:bg-zinc-800/40' : 'bg-zinc-900/30 hover:bg-zinc-800/40'} 
+                />
               ))
             )}
           </TableBody>
@@ -122,7 +126,7 @@ export function PoolsTable({ pools, totalCount, page, onPageChange, limit, onSea
             renderItem={props => (
               <button
                 {...props}
-                className="w-8 h-8 flex items-center justify-center rounded-md bg-zinc-900/70 text-zinc-500 hover:bg-zinc-800/70 hover:text-zinc-300 transition-all"
+                className="w-8 h-8 flex items-center justify-center rounded-md bg-zinc-900/70 text-zinc-500 hover:bg-blue-900/40 hover:text-blue-300 transition-all"
               />
             )}
             variant='bordered'
